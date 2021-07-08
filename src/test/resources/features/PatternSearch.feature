@@ -41,7 +41,7 @@ Feature: Pattern search
     When Offset is calculated
     Then Offset number is 34
 
-  Scenario: Parameters list must not be empty.
-    Given Parameters list is empty.
-    When Program is run.
+  Scenario: Exception is thrown when parameters list is empty.
+    Given Argument list exists.
+    When Parameters list is empty.
     Then Exception is thrown.

@@ -87,19 +87,19 @@ public class StepDefinition {
         assertEquals(offset, this.offset);
     }
 
-    @Given("Parameters list is empty.")
-    public void parametersListIsEmpty() {
+    @Given("Argument list exists.")
+    public void argumentListExists() {
         args = new String[2];
+    }
+
+    @When("Parameters list is empty.")
+    public void parametersListIsEmpty() {
         args[0] = null;
         args[1] = null;
     }
 
-    @When("Program is run.")
-    public void programIsRun() {
-        PatternSearch.main(args);
-    }
-
     @Then("Exception is thrown.")
     public void exceptionIsThrown() {
+        assertThrows(NullPointerException.class, () -> PatternSearch.main(args));
     }
 }
