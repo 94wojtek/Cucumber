@@ -49,6 +49,7 @@ public class StepDefinition {
         System.out.println("Txt: " + txt);
     }
 
+    //Replacing "[blank]" string in datatable with empty string
     @DataTableType(replaceWithEmptyString = "[blank]")
     public String listOfStringListsType(String cell) {
         return cell;
