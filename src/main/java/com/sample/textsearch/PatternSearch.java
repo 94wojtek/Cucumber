@@ -97,10 +97,8 @@ public class PatternSearch {
      */
     public static void main(String[] args) {
 
-        //String pat = args[0];
-        //String txt = args[1];
-        String pat = null;
-        String txt = "abacadabrabracabracadabrabrabracad";
+        String pat = args[0];
+        String txt = args[1];
 
         PatternSearch searcher = new PatternSearch(pat);
         int offset = searcher.search(txt);

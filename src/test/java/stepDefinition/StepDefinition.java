@@ -8,7 +8,8 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import java.util.List;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 import static org.junit.Assert.*;
 
@@ -16,12 +17,20 @@ public class StepDefinition {
     private PatternSearch ps;
     private String txt;
     private int offset;
-    private String[] args;
+    String[] args;
+    private Function<ArrayIndexOutOfBoundsException, Integer> e;
 
     @After
     public void resetFields() {
         txt = null;
         offset = 0;
+        args = null;
+    }
+
+    //Replacing "[blank]" string in datatable with empty string
+    @DataTableType(replaceWithEmptyString = "[blank]")
+    public String listOfStringListsType(String cell) {
+        return cell;
     }
 
     @Given("Input pattern is (.+)$")
@@ -36,45 +45,6 @@ public class StepDefinition {
         this.txt = txt;
     }
 
-    @Given("Input pattern value is empty")
-    public void inputPatternValueIsEmpty() {
-        String pattern = "";
-        System.out.println("Pattern: " + pattern);
-        ps = new PatternSearch(pattern);
-    }
-
-    @And("Input text value is empty")
-    public void inputTextValueIsNull() {
-        this.txt = "";
-        System.out.println("Txt: " + txt);
-    }
-
-    //Replacing "[blank]" string in datatable with empty string
-    @DataTableType(replaceWithEmptyString = "[blank]")
-    public String listOfStringListsType(String cell) {
-        return cell;
-    }
-
-    @Given("Input pattern is")
-    public void inputPatternIs(List<List<String>> patts) {
-        int index = 0;
-        for(String element : patts.get(index)) {
-            ps = new PatternSearch(element);
-            System.out.println("Pattern: " + element);
-            index++;
-        }
-    }
-
-    @And("Input text value is")
-    public void inputTextValueIs(List<List<String>> txts) {
-        int index = 0;
-        for(String element : txts.get(index)) {
-            txt = element;
-            System.out.println("Txt: " + element);
-            index++;
-        }
-    }
-
     @When("Offset is calculated")
     public void offsetIsCalculated() {
         offset = ps.search(txt);
@@ -87,19 +57,25 @@ public class StepDefinition {
         assertEquals(offset, this.offset);
     }
 
-    @Given("Argument list exists.")
-    public void argumentListExists() {
-        args = new String[2];
+    @Given("No parameters are provided")
+    public void oneParameterIsProvided() {
+        args = new String[0];
+        //ps = new PatternSearch(args[0]);
+        //txt = args[1];
     }
 
-    @When("Parameters list is empty.")
-    public void parametersListIsEmpty() {
-        args[0] = null;
-        args[1] = null;
+    @When("App starts")
+    public void app_starts() {
+         e = (arr) -> ps.search(txt);
+         ps.search(args[1]);
     }
 
-    @Then("Exception is thrown.")
-    public void exceptionIsThrown() {
-        assertThrows(NullPointerException.class, () -> PatternSearch.main(args));
+    @Then("App is terminated")
+    public void app_is_terminated() {
+        //ArrayIndexOutOfBoundsException e =
+       // e = assertThrows(ArrayIndexOutOfBoundsException.class, () -> PatternSearch.main(args));
+
+        String err = "Index 0 out of bounds for length 0";
+       // assertEquals(err, e.getMessage());
     }
 }

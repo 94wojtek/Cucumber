@@ -15,19 +15,6 @@ Feature: Pattern search
     |wac    |wojwojwojwoj                       |12      |
     |woj    |wojtek                             |0       |
 
-  Scenario: Search empty pattern through empty text.
-    Given Input pattern value is empty
-    And Input text value is empty
-    When Offset is calculated
-    Then Offset number is 0
-
-  Scenario: Show offset 0 when pattern or text is blank.
-    Given Input pattern is
-    |abcdef|[blank]|
-    And Input text value is
-      |[blank]|drgawelifuhawelfhawfghi|
-    When Offset is calculated
-    Then Offset number is 0
 
   Scenario: Uppercase pattern not found in lowercase text
     Given Input pattern is RAB
@@ -41,7 +28,7 @@ Feature: Pattern search
     When Offset is calculated
     Then Offset number is 34
 
-  Scenario: Exception is thrown when parameters list is empty.
-    Given Argument list exists.
-    When Parameters list is empty.
-    Then Exception is thrown.
+  Scenario: Invalid parameters list terminate application workflow
+    Given No parameters are provided
+    When App starts
+    Then App is terminated
