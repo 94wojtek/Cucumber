@@ -2,7 +2,6 @@ package stepDefinition;
 
 import com.sample.textsearch.PatternSearch;
 import io.cucumber.java.After;
-import io.cucumber.java.DataTableType;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -12,14 +11,12 @@ import static org.junit.Assert.*;
 
 public class StepDefinition {
     private PatternSearch ps;
-    private String txt;
     private int offset;
     private String[] args;
     private String exception;
 
     @After
     public void resetFields() {
-        txt = null;
         offset = 0;
         args = null;
         exception = null;
@@ -27,19 +24,21 @@ public class StepDefinition {
 
     @Given("Input pattern is (.+)$")
     public void inputPatternIsPattern(String pattern) {
-        System.out.println("Pattern: " + pattern);
-        ps = new PatternSearch(pattern);
+        args = new String[2];
+        args[0] = pattern;
+        System.out.println("Pattern: " + args[0]);
+        ps = new PatternSearch(args[0]);
     }
 
     @And("Input text is (.+)$")
     public void inputTextIsText(String txt) {
-        System.out.println("Txt: " + txt);
-        this.txt = txt;
+        args[1] = txt;
+        System.out.println("Txt: " + args[1]);
     }
 
     @When("Offset is calculated")
     public void offsetIsCalculated() {
-        offset = ps.search(txt);
+        offset = ps.search(args[1]);
     }
 
     @Then("Offset number is (.+)$")
@@ -66,8 +65,15 @@ public class StepDefinition {
 
     @Then("App is terminated")
     public void appIsTerminated() {
-        String err = "Index 0 out of bounds for length 0";
+        int i = args.length;
+        String err = "Index " + i + " out of bounds for length " + i;
         assertEquals(err, exception);
-        System.out.println("Expected exception was thrown.");
+        System.out.println("Expected exception was thrown.\n");
+    }
+
+    @Given("One parameter provided is (.+)$")
+    public void oneParameterProvidedIs(String param) {
+        args = new String[1];
+        args[0] = param;
     }
 }

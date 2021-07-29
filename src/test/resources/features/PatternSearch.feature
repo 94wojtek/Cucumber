@@ -28,7 +28,12 @@ Feature: Pattern search
     When Offset is calculated
     Then Offset number is 34
 
-  Scenario: Invalid parameters list terminate application workflow
+  Scenario: Empty parameters list terminate application workflow
     Given No parameters are provided
+    When App starts
+    Then App is terminated
+
+  Scenario: One parameter provided terminate application workflow
+    Given One parameter provided is "rab"
     When App starts
     Then App is terminated
