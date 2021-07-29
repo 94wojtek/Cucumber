@@ -17,6 +17,7 @@ public class StepDefinition {
 
     @After
     public void resetFields() {
+        ps = null;
         offset = 0;
         args = null;
         exception = null;
