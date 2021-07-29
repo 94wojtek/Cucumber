@@ -8,29 +8,21 @@ import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
 
-import java.util.function.Function;
-import java.util.function.Supplier;
-
 import static org.junit.Assert.*;
 
 public class StepDefinition {
     private PatternSearch ps;
     private String txt;
     private int offset;
-    String[] args;
-    private Function<ArrayIndexOutOfBoundsException, Integer> e;
+    private String[] args;
+    private String exception;
 
     @After
     public void resetFields() {
         txt = null;
         offset = 0;
         args = null;
-    }
-
-    //Replacing "[blank]" string in datatable with empty string
-    @DataTableType(replaceWithEmptyString = "[blank]")
-    public String listOfStringListsType(String cell) {
-        return cell;
+        exception = null;
     }
 
     @Given("Input pattern is (.+)$")
@@ -60,22 +52,22 @@ public class StepDefinition {
     @Given("No parameters are provided")
     public void oneParameterIsProvided() {
         args = new String[0];
-        //ps = new PatternSearch(args[0]);
-        //txt = args[1];
     }
 
     @When("App starts")
-    public void app_starts() {
-         e = (arr) -> ps.search(txt);
-         ps.search(args[1]);
+    public void appStarts() {
+        try {
+            PatternSearch.main(args);
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("App started.");
+            exception = e.getMessage();
+        }
     }
 
     @Then("App is terminated")
-    public void app_is_terminated() {
-        //ArrayIndexOutOfBoundsException e =
-       // e = assertThrows(ArrayIndexOutOfBoundsException.class, () -> PatternSearch.main(args));
-
+    public void appIsTerminated() {
         String err = "Index 0 out of bounds for length 0";
-       // assertEquals(err, e.getMessage());
+        assertEquals(err, exception);
+        System.out.println("Expected exception was thrown.");
     }
 }
